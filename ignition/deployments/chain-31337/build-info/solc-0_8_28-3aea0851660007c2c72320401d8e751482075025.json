@@ -1,0 +1,39 @@
+{
+  "_format": "hh3-sol-build-info-1",
+  "id": "solc-0_8_28-3aea0851660007c2c72320401d8e751482075025",
+  "solcVersion": "0.8.28",
+  "solcLongVersion": "0.8.28+commit.7893614a",
+  "userSourceNameMap": {
+    "contracts/Bank.sol": "project/contracts/Bank.sol"
+  },
+  "input": {
+    "language": "Solidity",
+    "settings": {
+      "evmVersion": "cancun",
+      "optimizer": {
+        "enabled": true,
+        "runs": 200
+      },
+      "outputSelection": {
+        "*": {
+          "": [
+            "ast"
+          ],
+          "*": [
+            "abi",
+            "evm.bytecode",
+            "evm.deployedBytecode",
+            "evm.methodIdentifiers",
+            "metadata"
+          ]
+        }
+      },
+      "remappings": []
+    },
+    "sources": {
+      "project/contracts/Bank.sol": {
+        "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.19;\n\ncontract Bank{\n    mapping (address => uint256) public balances;\n\n    event Deposit (address indexed user , uint256 amount);\n    event Withdraw (address indexed user , uint256 amount);\n\n    //deposit payable \n    function deposit() external payable {\n       \n        require(msg.value >0);\n        balances[msg.sender] += msg.value;\n        emit Deposit(msg.sender, msg.value);\n\n    }\n\n\n    //withdraw specified amount \n    function withdraw(uint256 amount) external {\n        //check balance , update and emit \n        require(amount >0, \"Amount must be greater than zero\");\n        uint256 bal = balances[msg.sender];\n        require (amount <= bal, \"Insufficient balance\");\n\n        //replicating re-entracy vulnerability \n        (bool ok,)  = msg.sender.call{value: amount}(\"\");\n        require(ok, \"Transfer failed\");\n\n        balances[msg.sender] -= amount;\n        emit Withdraw(msg.sender, amount);\n    }\n\n    //view balance for an address \n    function getBalance(address user) external view returns (uint256) {\n        return balances[user];\n    }\n}"
+      }
+    }
+  }
+}
