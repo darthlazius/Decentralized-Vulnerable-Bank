@@ -1,5 +1,5 @@
 import type { HardhatUserConfig } from "hardhat/config";
-
+import "@nomiclabs/hardhat-ethers";
 import hardhatToolboxViemPlugin from "@nomicfoundation/hardhat-toolbox-viem";
 import { configVariable } from "hardhat/config";
 
